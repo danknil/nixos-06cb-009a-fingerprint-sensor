@@ -1,28 +1,19 @@
-{config, lib, localPackages, ...}:
-
-let
+{packages, ...}: {
+  config,
+  lib,
+  ...
+}: let
   cfg = config.services.open-fprintd;
-in
+in {
+  options.services.open-fprintd.enable = lib.mkEnableOption "Patched fprind";
 
-with lib;
+  config = lib.mkIf cfg.enable {
+    environment.systemPackages = [packages.x86_64-linux.fprintd-clients];
 
-{
-  options = {
-    services.open-fprintd = {
-      enable = mkOption {
-        default = false;
-        type = with types; bool;
-      };
-    };
-  };
-
-  config = mkIf cfg.enable {
-    environment.systemPackages = [ localPackages.fprintd-clients ];
-
-    systemd.packages = [ localPackages.open-fprintd ];
+    systemd.packages = [packages.x86_64-linux.open-fprintd];
 
     # need to register the dbus configuration files of the package, otherwise we will get access errors
-    services.dbus.packages = [ localPackages.open-fprintd ];
+    services.dbus.packages = [packages.x86_64-linux.open-fprintd];
 
     # disable fprintd, since we are replacing it with open-fprintd and we are using the user executable of fprintd-clients
     services.fprintd.enable = false;

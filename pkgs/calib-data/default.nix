@@ -6,10 +6,9 @@
 {
   stdenv,
   pkgs,
-  calib-data-file
+  calib-data-file,
 }:
-
-stdenv.mkDerivation rec {
+stdenv.mkDerivation {
   pname = "calib-data";
   version = "0.0.1";
 

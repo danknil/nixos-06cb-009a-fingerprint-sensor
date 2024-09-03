@@ -1,30 +1,22 @@
-{config, lib, localPackages, ...}:
-
-let
+{packages, ...}: {
+  config,
+  lib,
+  ...
+}: let
   cfg = config.services.python-validity;
-in
+in {
+  options.services.python-validity.enable =
+    lib.mkEnableOption "python-validity driver for fingerprints";
 
-with lib;
-
-{
-  options = {
-    services.python-validity = {
-      enable = mkOption {
-        default = false;
-        type = with types; bool;
-      };
-    };
-  };
-
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     environment.systemPackages = [
-      localPackages.python-validity
+      packages.x86_64-linux.python-validity
     ];
 
-    systemd.packages = [ localPackages.python-validity ];
-    systemd.services.python3-validity.wantedBy = [ "multi-user.target" ];
+    systemd.packages = [packages.x86_64-linux.python-validity];
+    systemd.services.python3-validity.wantedBy = ["multi-user.target"];
 
     # need to register the dbus configuration files of the package, otherwise we will get access errors
-    services.dbus.packages = [ localPackages.python-validity ];
+    services.dbus.packages = [packages.x86_64-linux.python-validity];
   };
 }
