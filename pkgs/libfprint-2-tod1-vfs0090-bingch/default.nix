@@ -10,6 +10,7 @@
 {
   stdenv,
   lib,
+  calib-data,
   fetchFromGitLab,
   pkg-config,
   libfprint-tod,
@@ -24,7 +25,6 @@
   python3,
   python3Packages,
   python-validity,
-  calib-data-file,
 }:
 stdenv.mkDerivation {
   pname = "libfprint-2-tod1-vfs0090";

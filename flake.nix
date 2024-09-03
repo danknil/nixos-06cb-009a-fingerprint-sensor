@@ -2,7 +2,7 @@
   description = "Provides packages, modules and functions for the 06cb:009a fingerprint sensor.";
 
   inputs = {
-    nixpkgs.url = "nixpkgs/nixos-24.05";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-24.05";
   };
 
   outputs = {
@@ -14,5 +14,6 @@
   in {
     packages.x86_64-linux = import ./pkgs pkgs;
     nixosModules = import ./modules {inherit outputs inputs;};
+    lib = import ./lib {inherit outputs pkgs;};
   };
 }
