@@ -14,6 +14,7 @@
   in {
     packages.x86_64-linux = import ./pkgs pkgs;
     nixosModules = import ./modules {inherit outputs inputs;};
+    formatter.x86_64-linux = pkgs.alejandra;
     lib = import ./lib {inherit outputs pkgs;};
   };
 }
