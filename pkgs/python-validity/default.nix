@@ -4,6 +4,9 @@
   stdenv,
   fetchFromGitHub,
   python3Packages,
+  gobject-introspection,
+  wrapGAppsHook3,
+  glib,
 }: let
   inherit (python3Packages) python buildPythonPackage;
 in
@@ -64,6 +67,12 @@ in
             --replace "ExecStart=/usr/lib/python-validity/dbus-service" \
                       "ExecStart=$out/bin/python-validity-dbus-service"
     '';
+
+    nativeBuildInputs = [
+      gobject-introspection
+      wrapGAppsHook3
+      glib
+    ];
 
     propagatedBuildInputs = with python3Packages; [
       cryptography
