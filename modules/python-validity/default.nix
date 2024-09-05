@@ -4,19 +4,29 @@
   ...
 }: let
   cfg = config.services.python-validity;
+  inherit (packages.x86_64-linux) fprintd-clients open-fprintd python-validity;
 in {
   options.services.python-validity.enable =
     lib.mkEnableOption "python-validity driver for fingerprints";
 
   config = lib.mkIf cfg.enable {
     environment.systemPackages = [
-      packages.x86_64-linux.python-validity
+      fprintd-clients
+      open-fprintd
+      python-validity
     ];
 
-    systemd.packages = [packages.x86_64-linux.python-validity];
-    systemd.services.python3-validity.wantedBy = ["multi-user.target"];
+    systemd.packages = [
+      open-fprintd
+      python-validity
+    ];
 
-    # need to register the dbus configuration files of the package, otherwise we will get access errors
-    services.dbus.packages = [packages.x86_64-linux.python-validity];
+    systemd.services = {
+      open-fprintd.enable = true;
+      python3-validity.enable = true;
+    };
+
+    # disable since we replace it with open-fprintd
+    services.fprintd.enable = false;
   };
 }
